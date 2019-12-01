@@ -73,7 +73,7 @@ recevieCompletion finished
 
 ### 1.1 Subscriber 
 
-#### 1.1.1 쉽게 만드는 Subsriber
+### 1.1.1 쉽게 만드는 Subsriber
 
 <img width="581" alt="스크린샷 2019-12-01 오후 5 12 52" src="https://user-images.githubusercontent.com/9502063/69911364-d10c9c00-145d-11ea-9a4d-c83fe96752da.png">
 
@@ -83,11 +83,11 @@ recevieCompletion finished
 
 
 
-#### 1.1.2 아예 만드는 Subsriber
+### 1.1.2 아예 만드는 Subsriber
 
 이번엔 subscriber를 아예 만들어서 써보겠습니다. 
 
-##### Option 1
+#### Option 1
 
 
 ```swift
@@ -123,15 +123,22 @@ recevieCompletion finished
 
 
   1. receiveSubscription 블럭에서 방출되는 몇개의 값을 받을 것인지 지정해줍니다.  
-    ` subscription.request(.unlimited)` 를 해서 제한없이 방출되는 값을 모두 받겠다! 라고 해줍니다  
-    이렇게 옵션이 있는데, none을 지정해주면 방출되는 값 중 아무것도 안받고 (실제 receive Value 가 안불림) max로 최대 몇 개의 값을 받을 것인지 지정해줄 수 있습니다. ( ''추가) Subscribers.Demand의 종류' 를 참고하세요 ')  
-    <img width="518" alt="스크린샷 2019-11-26 오후 10 23 55" src="https://user-images.githubusercontent.com/9502063/69637148-70671300-109b-11ea-9599-144a8498faa2.png">
-
-
+     `subscription.request(.unlimited)`를 해서 제한없이 방출되는 값을 모두 받겠다! 라고 해줍니다  
+     
+     이렇게 옵션이 있는데,  
+     
+     <img width="518" alt="스크린샷 2019-11-26 오후 10 23 55" src="https://user-images.githubusercontent.com/9502063/69637148-70671300-109b-11ea-9599-144a8498faa2.png">  
+     
+     none을 지정해주면 방출되는 값 중 아무것도 안받고 (실제 receive Value 가 안불림)  
+     max로 최대 몇 개의 값을 받을 것 인지 지정해주면 딱 그만큼의 값만 받습니다.  
+     ('추가) Subscribers.Demand의 종류' 를 참고하세요)
+       
+     
 
   2. receiveValue 블럭에서는 방출된 값이 들어오고 1에서 말해준 요구사항을 재확인(?) 해주는 의미로 Demand를 return 해줍니다 
-     .none을 리턴해주고 위에 적은 요구사항을 바꾸지 않을거야! 해줍니다.  
-     => 여러 조합으로 좀 더 테스트가 필요함. 
+     `.none`을 리턴해주며 위에 적은 요구사항을 바꾸지 않을거야! 해줍니다.  
+     
+     => 1과 2는 여러 조합으로 좀 더 테스트가 필요할 것 같습니다. 
 
 
 
@@ -140,9 +147,9 @@ recevieCompletion finished
      
 
 
-##### Option 2
+#### Option 2
 
-저렇게 써서 가독성이 안좋거나 항상 똑같은 설정으로 해주고 싶다면,    
+저렇게 써서 가독성이 안좋게 느껴지거나 항상 똑같은 설정의 `Subscriber`를 사용하고 싶다면,    
 `Subscriber` 프로토콜을 채택한 클래스나 구조체를 만들어줘서 쓰시면 됩니다. 
 
 
@@ -353,9 +360,9 @@ receive Subscription [1, 2, 3, 4, 5, 6]
 
 ### 1.2 Publisher
 
-####  1.2.1 쉽게 만드는 Publisher 
+### 1.2.1 쉽게 만드는 Publisher 
 
-##### 1.2.1.1 Just 
+#### 1.2.1.1 Just 
 
 
 
@@ -388,7 +395,7 @@ finished
 
 
 
-##### 1.2.1.2 시퀀스 타입.publisher 
+#### 1.2.1.2 시퀀스 타입.publisher 
 
 <img width="747" alt="스크린샷 2019-12-01 오후 4 43 39" src="https://user-images.githubusercontent.com/9502063/69911117-bcc6a000-1459-11ea-93f2-4ebbc49de66c.png">
 
@@ -452,7 +459,7 @@ finished
 
 
 
-####  1.2.2 아예 만드는 Publisher 
+### 1.2.2 아예 만드는 Publisher 
 
 위의  `AnySubscriber`  의 이니셜라이저는 이렇게 되어있습니다.   
 
