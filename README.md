@@ -25,13 +25,13 @@ class ViewController: UIViewController {
       Just(1).sink(receiveCompletion: { (completion) in
           print("recevieCompletion \(completion)")
       }) { value in
-          print("recevieCompletion \(value)")
+          print("recevieValue \(value)")
       }.store(in: &cancelBag)
   }
 }
 
 // print 
-recevieCompletion 1
+recevieValue 1
 recevieCompletion finished
 ```
 
@@ -65,18 +65,29 @@ class ViewController: UIViewController {
 }
 
 // print 
-1 
+recevieValue 1
+recevieCompletion finished
 ```
 
 
 
 ### 1.1 Subscriber 
 
+#### 1.1.1 쉽게 만드는 Subsriber
 
+<img width="581" alt="스크린샷 2019-12-01 오후 5 12 52" src="https://user-images.githubusercontent.com/9502063/69911364-d10c9c00-145d-11ea-9a4d-c83fe96752da.png">
+
+
+
+위에서 봤던 예제처럼 `sink` 함수를 이용하여 쉽게 subscribe 할 수 있습니다. 
+
+
+
+#### 1.1.2 아예 만드는 Subsriber
 
 이번엔 subscriber를 아예 만들어서 써보겠습니다. 
 
-#### Option 1
+##### Option 1
 
 
 ```swift
@@ -112,9 +123,9 @@ recevieCompletion finished
 
 
   1. receiveSubscription 블럭에서 방출되는 몇개의 값을 받을 것인지 지정해줍니다.  
-  ` subscription.request(.unlimited)` 를 해서 제한없이 방출되는 값을 모두 받겠다! 라고 해줍니다  
-  이렇게 옵션이 있는데, none을 지정해주면 방출되는 값 중 아무것도 안받고 (실제 receive Value 가 안불림) max로 최대 몇 개의 값을 받을 것인지 지정해줄 수 있습니다. (1.1.1에서 보여드림)  
-  <img width="518" alt="스크린샷 2019-11-26 오후 10 23 55" src="https://user-images.githubusercontent.com/9502063/69637148-70671300-109b-11ea-9599-144a8498faa2.png">
+    ` subscription.request(.unlimited)` 를 해서 제한없이 방출되는 값을 모두 받겠다! 라고 해줍니다  
+    이렇게 옵션이 있는데, none을 지정해주면 방출되는 값 중 아무것도 안받고 (실제 receive Value 가 안불림) max로 최대 몇 개의 값을 받을 것인지 지정해줄 수 있습니다. ( ''추가) Subscribers.Demand의 종류' 를 참고하세요 ')  
+    <img width="518" alt="스크린샷 2019-11-26 오후 10 23 55" src="https://user-images.githubusercontent.com/9502063/69637148-70671300-109b-11ea-9599-144a8498faa2.png">
 
 
 
@@ -126,13 +137,15 @@ recevieCompletion finished
 
   3. receiveCompletion 블럭은 finished 되었을 때 불립니다.
 
+     
 
-#### Option 2
+
+##### Option 2
 
 저렇게 써서 가독성이 안좋거나 항상 똑같은 설정으로 해주고 싶다면,    
 `Subscriber` 프로토콜을 채택한 클래스나 구조체를 만들어줘서 쓰시면 됩니다. 
 
-   
+
  ```swift
  struct CustomSubscriber: Subscriber {
 
@@ -177,12 +190,12 @@ recevieCompletion finished
  ```
 
  combineIdentifier 는 뭐하는 녀석인지 좀 더 알아봐야겠습니다 -!
+
    
-   
 
 
 
-### 1.1.1 Subscribers.Demand의 종류
+### 추가) Subscribers.Demand의 종류
 
 
 
@@ -338,5 +351,128 @@ class ViewController: UIViewController {
 receive Subscription [1, 2, 3, 4, 5, 6] 
 ```
 
-
 ### 1.2 Publisher
+
+####  1.2.1 쉽게 만드는 Publisher 
+
+##### 1.2.1.1 Just 
+
+
+
+<img width="743" alt="스크린샷 2019-12-01 오후 4 50 20" src="https://user-images.githubusercontent.com/9502063/69911159-aa993180-145a-11ea-90e3-7cb8acdaaf9f.png">
+
+
+
+```swift
+class ViewController: UIViewController {
+    
+    private var cancelBag = Set<AnyCancellable>()
+
+    override func viewDidLoad() {
+        super.viewDidLoad()
+        
+        // publisher의 타입은 Just<Int> 
+        let publisher = Just(1)
+        publisher.sink(receiveCompletion: { (completion) in
+            print(completion)
+        }) { (value) in
+            print(value)
+        }.store(in: &cancelBag)
+    }
+}
+
+// print 
+1
+finished 
+```
+
+
+
+##### 1.2.1.2 시퀀스 타입.publisher 
+
+<img width="747" alt="스크린샷 2019-12-01 오후 4 43 39" src="https://user-images.githubusercontent.com/9502063/69911117-bcc6a000-1459-11ea-93f2-4ebbc49de66c.png">
+
+
+
+```swift
+class ViewController: UIViewController {
+    
+    private var cancelBag = Set<AnyCancellable>()
+
+    override func viewDidLoad() {
+        super.viewDidLoad()
+        
+        // publisher의 타입은 Publishers.Sequence<[Int], Never>  
+        let publisher = [1,2,3,4,5,6].publisher
+        publisher.sink(receiveCompletion: { (completion) in
+            print(completion)
+        }) { (value) in
+            print(value)
+        }.store(in: &cancelBag)
+    }
+}
+
+
+// print
+1
+2
+3
+4
+5
+6
+finished
+```
+
+```swift
+class ViewController: UIViewController {
+    
+    private var cancelBag = Set<AnyCancellable>()
+
+    override func viewDidLoad() {
+        super.viewDidLoad()
+        
+       // publisher의 타입은 Publishers.Sequence<String, Never>
+        let publisher = "123".publisher
+        publisher.sink(receiveCompletion: { (completion) in
+            print(completion)
+        }) { (value) in
+            print(value)
+        }.store(in: &cancelBag)
+    }
+}
+
+
+
+// print
+1
+2
+3
+finished
+```
+
+
+
+####  1.2.2 아예 만드는 Publisher 
+
+위의  `AnySubscriber`  의 이니셜라이저는 이렇게 되어있습니다.   
+
+우리는 두번째 이니셜라이저로 커스텀한 Subscriber을 만들었습니다. 
+
+<img width="753" alt="스크린샷 2019-12-01 오후 5 01 36" src="https://user-images.githubusercontent.com/9502063/69911263-3d869b80-145c-11ea-9077-633844047885.png">
+
+
+
+하지만 Publisher의 이니셜라이저는 하나밖에 없어서 커스텀한 Publisher를 못만드는 것 같습니다. 
+
+<img width="753" alt="스크린샷 2019-12-01 오후 5 02 13" src="https://user-images.githubusercontent.com/9502063/69911268-542cf280-145c-11ea-9d37-35aa6d25e0d0.png"> 
+
+
+
+저 P에 Publisher를 넘겨줘야하는 것 같은데 어떻게 하는 지 모르겠네요 
+
+<img width="480" alt="스크린샷 2019-12-01 오후 5 05 53" src="https://user-images.githubusercontent.com/9502063/69911311-d6b5b200-145c-11ea-9d7c-c4d357cbb6a1.png"> 
+
+
+
+
+
