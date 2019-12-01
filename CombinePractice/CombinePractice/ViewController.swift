@@ -28,6 +28,7 @@ struct StringSubscriber: Subscriber {
     var combineIdentifier: CombineIdentifier
 }
 
+
 struct CustomSubscriber: Subscriber {
     
     func receive(subscription: Subscription) {
@@ -52,6 +53,17 @@ struct CustomSubscriber: Subscriber {
     var combineIdentifier: CombineIdentifier
 }
 
+
+struct CustomPublisher: Publisher {
+    
+    func receive<S>(subscriber: S) where S : Subscriber, CustomPublisher.Failure == S.Failure, CustomPublisher.Output == S.Input {
+        Swift.print(subscriber)
+    }
+    
+    typealias Output = Int
+    typealias Failure = Never
+}
+
 class ViewController: UIViewController {
     
     private var cancelBag = Set<AnyCancellable>()
@@ -59,9 +71,22 @@ class ViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         
-        let publisher = [1,2,3,4,5,6].publisher
-        let subscriber = CustomSubscriber(combineIdentifier: CombineIdentifier())
-        publisher.subscribe(subscriber)
+        let subject = PassthroughSubject<Int, Never>()
+        
+        let subscriber = subject.sink(receiveCompletion: { (completion) in
+            print(completion)
+        }) { value in
+            print(value)
+        }
+        subscriber.store(in: &cancelBag)
+
+        subject.send(1)
+        subject.send(2)
+        
+        subscriber.cancel()
+        
+        subject.send(3)
+        subject.send(4)
     }
 }
 
