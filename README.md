@@ -2,11 +2,10 @@
 
 ## 1. Publisher와 Subscriber 
 
-- Subscriber는 Publisher를 subscribe한다 
-
+- Subscriber는 Publisher를 subscribe한다  
   Publisher는 데이터를 emit 한다. 
 
-- Publisher는 프로토콜이고 AnyPublisher는 Publisher을 따르는 struct
+- Publisher는 프로토콜이고 AnyPublisher는 Publisher을 따르는 struct  
   Subscriber는 프로토콜이고 AnySubscriber는 Subscriber를 따르는 struct
 
 
