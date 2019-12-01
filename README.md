@@ -35,11 +35,9 @@ recevieCompletion finished
 
 
 
-값을 방출하는 `Just(1)` 은 `publisher` 
-
-방출되는 값을 구독하여 프린트해주는 `sink` 블럭은 `subscriber` 라고 할 수 있겠습니다.
-
-명시적으로 써주면 이렇게 되겠죠...?
+값을 방출하는 `Just(1)` 은 `publisher`   
+방출되는 값을 구독하여 프린트해주는 `sink` 블럭은 `subscriber` 라고 할 수 있겠습니다.  
+명시적으로 써주면 이렇게 되겠죠...?  
 
 
 ```swift
@@ -106,33 +104,22 @@ recevieCompletion finished
 
 
 
-1) receiveSubscription 블럭에서 방출되는 몇개의 값을 받을 것인지 지정해줍니다.
-` subscription.request(.unlimited)` 를 해서 제한없이 방출되는 값을 모두 받겠다! 라고 해줍니다
-
-이렇게 옵션이 있는데, none을 지정해주면 방출되는 값 중 아무것도 안받고 (실제 receive Value 가 안불림) max로 최대 몇 개의 값을 받을 것인지 지정해줄 수 있습니다. ( 1.1.1에서 보여드림)
-
-
-<img width="518" alt="스크린샷 2019-11-26 오후 10 23 55" src="https://user-images.githubusercontent.com/9502063/69637148-70671300-109b-11ea-9599-144a8498faa2.png">
+1. receiveSubscription 블럭에서 방출되는 몇개의 값을 받을 것인지 지정해줍니다.
+` subscription.request(.unlimited)` 를 해서 제한없이 방출되는 값을 모두 받겠다! 라고 해줍니다  
+이렇게 옵션이 있는데, none을 지정해주면 방출되는 값 중 아무것도 안받고 (실제 receive Value 가 안불림) max로 최대 몇 개의 값을 받을 것인지 지정해줄 수 있습니다. (1.1.1에서 보여드림)  
+ <img width="518" alt="스크린샷 2019-11-26 오후 10 23 55" src="https://user-images.githubusercontent.com/9502063/69637148-70671300- 109b-11ea-9599-144a8498faa2.png">
 
 
 
-2) receiveValue 블럭에서는 방출된 값이 들어오고 1에서 말해준 요구사항을 재확인(?) 해주는 의미로 Demand를 return 해줍니다 
-
-.none을 리턴해주고 위에 적은 요구사항을 바꾸지 않을거야! 해줍니다. 
-
-
-
-=> 여러 조합으로 좀 더 테스트가 필요함. 
+2. receiveValue 블럭에서는 방출된 값이 들어오고 1에서 말해준 요구사항을 재확인(?) 해주는 의미로 Demand를 return 해줍니다 
+   .none을 리턴해주고 위에 적은 요구사항을 바꾸지 않을거야! 해줍니다.  
+   => 여러 조합으로 좀 더 테스트가 필요함. 
 
 
 
-3) receiveCompletion 블럭은 finished 되었을 때 불립니다. 
-
-
-
-저렇게 써서 가독성이 안좋거나 항상 똑같은 설정으로 해주고 싶다면, 
-
-`Subscriber` 프로토콜을 채택한 클래스나 구조체를 만들어줘서 쓰시면 됩니다. 
+3. receiveCompletion 블럭은 finished 되었을 때 불립니다.  
+   저렇게 써서 가독성이 안좋거나 항상 똑같은 설정으로 해주고 싶다면,  
+   `Subscriber` 프로토콜을 채택한 클래스나 구조체를 만들어줘서 쓰시면 됩니다. 
 
 
 
