@@ -123,16 +123,16 @@ recevieCompletion finished
 
 
   1. receiveSubscription 블럭에서 방출되는 몇개의 값을 받을 것인지 지정해줍니다.  
-    ` subscription.request(.unlimited)` 를 해서 제한없이 방출되는 값을 모두 받겠다! 라고 해줍니다  
-    이렇게 옵션이 있는데, 
-    
-    <img width="518" alt="스크린샷 2019-11-26 오후 10 23 55" src="https://user-images.githubusercontent.com/9502063/69637148-70671300-109b-11ea-9599-144a8498faa2.png">  
-    
-    none을 지정해주면 방출되는 값 중 아무것도 안받고 (실제 receive Value 가 안불림)  
-    max로 최대 몇 개의 값을 받을 것 인지 지정해주면 딱 그만큼의 값만 받습니다. 
-    ('추가) Subscribers.Demand의 종류' 를 참고하세요)  
-
-
+     `subscription.request(.unlimited)`를 해서 제한없이 방출되는 값을 모두 받겠다! 라고 해줍니다  
+     
+     이렇게 옵션이 있는데,  
+     
+     <img width="518" alt="스크린샷 2019-11-26 오후 10 23 55" src="https://user-images.githubusercontent.com/9502063/69637148-70671300-109b-11ea-9599-144a8498faa2.png">  
+     
+     none을 지정해주면 방출되는 값 중 아무것도 안받고 (실제 receive Value 가 안불림)  
+     max로 최대 몇 개의 값을 받을 것 인지 지정해주면 딱 그만큼의 값만 받습니다. 
+     ('추가) Subscribers.Demand의 종류' 를 참고하세요)  
+     
 
   2. receiveValue 블럭에서는 방출된 값이 들어오고 1에서 말해준 요구사항을 재확인(?) 해주는 의미로 Demand를 return 해줍니다 
      `.none`을 리턴해주며 위에 적은 요구사항을 바꾸지 않을거야! 해줍니다.  
