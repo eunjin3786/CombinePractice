@@ -10,12 +10,12 @@
 
 
 
-```swift
-import UIKit
-import Combine
+  ```swift
+  import UIKit
+  import Combine
 
-class ViewController: UIViewController {
-    
+  class ViewController: UIViewController {
+
     private var cancelBag = Set<AnyCancellable>()
 
     override func viewDidLoad() {
@@ -26,18 +26,20 @@ class ViewController: UIViewController {
             print("recevieCompletion \(value)")
         }.store(in: &cancelBag)
     }
-}
+  }
 
-// print 
-recevieCompletion 1
-recevieCompletion finished
-```
+  // print 
+  recevieCompletion 1
+  recevieCompletion finished
+  ```
 
 
 
 값을 방출하는 `Just(1)` 은 `publisher`   
 방출되는 값을 구독하여 프린트해주는 `sink` 블럭은 `subscriber` 라고 할 수 있겠습니다.  
 명시적으로 써주면 이렇게 되겠죠...?  
+
+
 
 
 ```swift
@@ -120,61 +122,61 @@ recevieCompletion finished
 3. receiveCompletion 블럭은 finished 되었을 때 불립니다.  
    저렇게 써서 가독성이 안좋거나 항상 똑같은 설정으로 해주고 싶다면,  
    `Subscriber` 프로토콜을 채택한 클래스나 구조체를 만들어줘서 쓰시면 됩니다. 
-
-
-
-```swift
-struct CustomSubscriber: Subscriber {
-    
-    func receive(subscription: Subscription) {
-        print("receive Subscription \(subscription)")
-        subscription.request(.max(1))
-    }
-    
-    func receive(_ input: Int) -> Subscribers.Demand {
-        print("receive Value \(input)")
-        return .none
-    }
-    
-    func receive(completion: Subscribers.Completion<Never>) {
-        print("recevieCompletion \(completion)")
-    }
-    
-    typealias Input = Int
-    typealias Failure = Never
-    
-    var combineIdentifier: CombineIdentifier
-}
-
-class ViewController: UIViewController {
-    
-    private var cancelBag = Set<AnyCancellable>()
-
-    override func viewDidLoad() {
-        super.viewDidLoad()
-        
-        let publisher = Just(1)
-        let subscriber = CustomSubscriber(combineIdentifier: CombineIdentifier(combineIdentifier: CombineIdentifier()))
-        publisher.subscribe(subscriber)
-    }
-}
-
-// print 
-
-receive Subscription Just
-receive Value 1
-recevieCompletion finished
-```
-
-
-
-combineIdentifier 는 뭐하는 녀석인지 좀 더 알아봐야겠습니다 -!
-
-
+   
+   
+   
+   ```swift
+   struct CustomSubscriber: Subscriber {
+       
+       func receive(subscription: Subscription) {
+           print("receive Subscription \(subscription)")
+           subscription.request(.max(1))
+       }
+       
+       func receive(_ input: Int) -> Subscribers.Demand {
+           print("receive Value \(input)")
+           return .none
+       }
+       
+       func receive(completion: Subscribers.Completion<Never>) {
+           print("recevieCompletion \(completion)")
+       }
+       
+       typealias Input = Int
+       typealias Failure = Never
+       
+       var combineIdentifier: CombineIdentifier
+   }
+   
+   class ViewController: UIViewController {
+       
+       private var cancelBag = Set<AnyCancellable>()
+   
+       override func viewDidLoad() {
+           super.viewDidLoad()
+           
+           let publisher = Just(1)
+           let subscriber = CustomSubscriber(combineIdentifier: CombineIdentifier(combineIdentifier: CombineIdentifier()))
+           publisher.subscribe(subscriber)
+       }
+   }
+   
+   // print 
+   
+   receive Subscription Just
+   receive Value 1
+   recevieCompletion finished
+   ```
+   
+   combineIdentifier 는 뭐하는 녀석인지 좀 더 알아봐야겠습니다 -!
+   
+   
 
 
 
 ### 1.1.1 Subscribers.Demand 
+
+
 
 ##### 1. Max 
 
