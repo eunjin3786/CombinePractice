@@ -295,7 +295,7 @@ recevieCompletion finished
 
 #### 3. none 
 
-```swift 
+```swift
 struct CustomSubscriber: Subscriber {
     
     func receive(subscription: Subscription) {
