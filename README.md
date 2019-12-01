@@ -476,3 +476,81 @@ finished
 
 
 
+## 2. Subject 
+
+- Publisher와 Subscriber 역할을 모두 할 수 있다. 
+
+
+
+### 2.1 PassthroughSubject
+
+#### 예제
+
+```swift
+class ViewController: UIViewController {
+    
+    private var cancelBag = Set<AnyCancellable>()
+
+    override func viewDidLoad() {
+        super.viewDidLoad()
+        
+        let subject = PassthroughSubject<Int, Never>()
+        
+        subject.sink(receiveCompletion: { (completion) in
+            print(completion)
+        }) { value in
+            print(value)
+        }.store(in: &cancelBag)
+        
+        subject.send(1)
+        subject.send(2)
+        subject.send(completion: .finished)
+    }
+}
+
+// print
+1
+2
+finished
+```
+
+
+
+### 추가 ) cancel 함수로 구독을 취소할 수 있음. 
+
+```swift
+class ViewController: UIViewController {
+    
+    private var cancelBag = Set<AnyCancellable>()
+
+    override func viewDidLoad() {
+        super.viewDidLoad()
+        
+        let subject = PassthroughSubject<Int, Never>()
+        
+        let subscriber = subject.sink(receiveCompletion: { (completion) in
+            print(completion)
+        }) { value in
+            print(value)
+        }
+        subscriber.store(in: &cancelBag)
+
+        subject.send(1)
+        subject.send(2)
+        
+        subscriber.cancel()
+        
+        subject.send(3)
+        subject.send(4)
+    }
+}
+
+
+// print
+1
+2
+```
+
+
+
+### 추가 ) Type eraser 
