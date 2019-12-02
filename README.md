@@ -617,3 +617,79 @@ let subject = PassthroughSubject<Int, Never>().eraseToAnyPublisher()
 
 
 
+## 3. Operators
+
+### 3.1 collect
+
+그룹을 지어주는 Operator 
+
+```swift
+class ViewController: UIViewController {
+    
+    private var cancelBag = Set<AnyCancellable>()
+
+    override func viewDidLoad() {
+        super.viewDidLoad()
+        
+        [1,2,3,4,5].publisher.sink { value in
+            print(value)
+        }.store(in: &cancelBag)
+      
+        // print
+        1
+        2
+        3
+        4
+        5
+        
+        // MARK: - 그룹으로 묶어줘
+        [1,2,3,4,5].publisher.collect().sink { value in
+            print(value)
+        }.store(in: &cancelBag)
+      
+        // print
+        [1, 2, 3, 4, 5]
+      
+      
+        // MARK: - 1개씩 그룹으로 묶어줘
+        [1,2,3,4,5].publisher.collect(1).sink { value in
+            print(value)
+        }.store(in: &cancelBag)
+      
+        // print
+          [1]
+          [2]
+          [3]
+          [4]
+          [5]
+
+        // MARK: - 2개씩 그룹으로 묶어줘
+        [1,2,3,4,5].publisher.collect(2).sink { value in
+            print(value)
+        }.store(in: &cancelBag)
+      
+        // print
+          [1, 2]
+          [3, 4]
+          [5]
+        
+        // MARK: - 6개씩 그룹으로 묶어줘 (과연..? 5개밖에 없는데..)
+        [1,2,3,4,5].publisher.collect(6).sink { value in
+            print(value)
+        }.store(in: &cancelBag)
+      
+        // print
+        [1, 2, 3, 4, 5]
+      
+      
+        // MARK: - 0개씩 그룹으로 묶어줘 (과연..?)
+        [1,2,3,4,5].publisher.collect(6).sink { value in
+            print(value)
+        }.store(in: &cancelBag)
+      
+        // print
+        [1, 2, 3, 4, 5]
+    }
+}
+```
+
