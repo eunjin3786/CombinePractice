@@ -132,7 +132,7 @@ recevieCompletion finished
      none을 지정해주면 방출되는 값 중 아무것도 안받고 (실제 receive Value 가 안불림)  
      max로 최대 몇 개의 값을 받을 것 인지 지정해주면 딱 그만큼의 값만 받습니다.  
      ('추가) Subscribers.Demand의 종류' 를 참고하세요)
-       
+     
      
 
   2. receiveValue 블럭에서는 방출된 값이 들어오고 1에서 말해준 요구사항을 재확인(?) 해주는 의미로 Demand를 return 해줍니다 
@@ -523,7 +523,46 @@ finished
 
 
 
-### 추가 ) cancel 함수로 구독을 취소할 수 있음. 
+### 2.2 PassthroughSubject
+
+- 초기값을 가지는 Subject
+
+#### 예제
+
+```swift
+class ViewController: UIViewController {
+    
+    private var cancelBag = Set<AnyCancellable>()
+
+    override func viewDidLoad() {
+        super.viewDidLoad()
+        
+        let subject = CurrentValueSubject<Int, Never>(100)
+        
+        subject.sink(receiveCompletion: { (completion) in
+            print(completion)
+        }) { value in
+            print(value)
+        }.store(in: &cancelBag)
+
+        subject.send(1)
+        subject.send(2)
+        subject.send(completion: .finished)
+    }
+}
+
+// print
+100
+1
+2
+finished
+```
+
+
+
+### 2.3 추가 
+
+#### 2.3.1 cancel 함수로 구독을 취소할 수 있음. 
 
 ```swift
 class ViewController: UIViewController {
@@ -560,4 +599,21 @@ class ViewController: UIViewController {
 
 
 
-### 추가 ) Type eraser 
+#### 2.3.2 eraseToAnyPublisher 
+
+```swift
+let subject = PassthroughSubject<Int, Never>()
+
+// subject의 타입은 PassthroughSubject<Int, Never> 
+```
+
+
+
+```swift
+let subject = PassthroughSubject<Int, Never>().eraseToAnyPublisher()
+
+// subject의 타입은 AnyPublisher<Int, Never>
+```
+
+
+

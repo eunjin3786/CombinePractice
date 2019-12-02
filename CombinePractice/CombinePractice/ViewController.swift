@@ -71,22 +71,17 @@ class ViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         
-        let subject = PassthroughSubject<Int, Never>()
+        let subject = CurrentValueSubject<Int, Never>(100)
         
-        let subscriber = subject.sink(receiveCompletion: { (completion) in
+        subject.sink(receiveCompletion: { (completion) in
             print(completion)
         }) { value in
             print(value)
-        }
-        subscriber.store(in: &cancelBag)
+        }.store(in: &cancelBag)
 
         subject.send(1)
         subject.send(2)
-        
-        subscriber.cancel()
-        
-        subject.send(3)
-        subject.send(4)
+        subject.send(completion: .finished)
     }
 }
 
