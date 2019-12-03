@@ -693,3 +693,97 @@ class ViewController: UIViewController {
 }
 ```
 
+
+
+### 3.2 map과 map(keyPath: )
+
+```swift
+struct Point {
+    let x: Int
+    let y: Int
+}
+
+class ViewController: UIViewController {
+  
+    private var cancelBag = Set<AnyCancellable>()
+
+    override func viewDidLoad() {
+        super.viewDidLoad()
+        
+        let publisher = Just(Point(x: 1, y: 2))
+        
+        // 1 
+        publisher.map { $0.x }.sink {
+            print($0)
+        }.store(in: &cancelBag)
+        
+        // 2 
+        publisher.map(\.x).sink {
+            print($0)
+        }.store(in: &cancelBag)
+    }
+}
+
+// print
+1
+1
+```
+
+
+
+1번은 그냥 `map`, 2번은 `map(keyPath:)`  
+
+둘다 Swift에서 원래 쓰던 것과 동작이 같다. 
+
+
+
+### 3.3 flatMap 
+
+<img width="782" alt="스크린샷 2019-12-04 오전 12 02 21" src="https://user-images.githubusercontent.com/9502063/70062442-5ee8b280-1629-11ea-8c12-3e832a07935a.png">
+
+map은 클로저에 값을, flatMap은 Publisher를 리턴시켜줘야한다
+
+
+
+유데미 강사님이 예를 들어주신 것 
+
+```swift
+struct School {
+    let name: String
+    let numberOfStudentStream: CurrentValueSubject<Int, Never>
+    
+    init(name: String, numberOfStudent: Int) {
+        self.name = name
+        self.numberOfStudentStream = CurrentValueSubject(numberOfStudent)
+    }
+}
+
+class ViewController: UIViewController {
+
+    private var cancelBag = Set<AnyCancellable>()
+
+    override func viewDidLoad() {
+        super.viewDidLoad()
+        
+        let citySchool = School(name: "City School", numberOfStudent: 100)
+        let school = CurrentValueSubject<School, Never>(citySchool)
+        
+        school.flatMap {
+            $0.numberOfStudentStream
+        }.sink {
+            print($0)
+        }.store(in: &cancelBag)
+        
+        school.value.numberOfStudentStream.send(70)
+        
+        let townSchool = School(name: "Town Scholl", numberOfStudent: 45)
+        school.value = townSchool
+    }
+}
+
+// print
+100
+70
+45
+```
+
