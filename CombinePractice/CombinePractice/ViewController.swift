@@ -25,7 +25,7 @@ struct StringSubscriber: Subscriber {
     typealias Input = String
     typealias Failure = Never
     
-    var combineIdentifier: CombineIdentifier
+    let combineIdentifier = CombineIdentifier()
 }
 
 
@@ -50,7 +50,7 @@ struct CustomSubscriber: Subscriber {
     typealias Input = Int
     typealias Failure = Never
     
-    var combineIdentifier: CombineIdentifier
+    let combineIdentifier = CombineIdentifier()
 }
 
 
